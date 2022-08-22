@@ -38,10 +38,10 @@ const createEditPointTemplate = (point, offers, destination) => {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${shortDateAndTimeStart}>
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${shortDateAndTimeStart}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value=${shortDateAndTimeEnd}>
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${shortDateAndTimeEnd}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -77,24 +77,28 @@ const createEditPointTemplate = (point, offers, destination) => {
 };
 
 export default class EditPointView {
+  #element = null;
+  #point = null;
+  #offers = null;
+  #destination = null;
   constructor(point, offers, destination) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
   }
 
-  getTemplate() {
-    return createEditPointTemplate(this.point, this.offers, this.destination);
+  get template() {
+    return createEditPointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

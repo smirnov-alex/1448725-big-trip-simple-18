@@ -28,9 +28,9 @@ const createPointTemplate = (point, offers, destination) => {
     <h3 class="event__title">${type} ${destination.name}</h3>
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime=${fullDateAndTimeStart}>${timeStart}</time>
+        <time class="event__start-time" datetime="${fullDateAndTimeStart}">${timeStart}</time>
         &mdash;
-        <time class="event__end-time" datetime=${fullDateAndTimeEnd}>${timeEnd}</time>
+        <time class="event__end-time" datetime="${fullDateAndTimeEnd}">${timeEnd}</time>
       </p>
     </div>
     <p class="event__price">
@@ -48,24 +48,28 @@ const createPointTemplate = (point, offers, destination) => {
 };
 
 export default class PointView {
+  #element = null;
+  #point = null;
+  #offers = null;
+  #destination = null;
   constructor(point, offers, destination) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
   }
 
-  getTemplate() {
-    return createPointTemplate(this.point, this.offers, this.destination);
+  get template() {
+    return createPointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
