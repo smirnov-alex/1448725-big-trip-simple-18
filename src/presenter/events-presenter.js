@@ -1,6 +1,6 @@
 import EventsListView from '../view/events-list';
 import EditPointView from '../view/edit-point-view';
-//import AddPointView from '../view/add-point-view';
+import NoPointsView from '../view/no-points-view';
 import PointView from '../view/point-view';
 import PointModel from '../model/point';
 import { render } from '../render.js';
@@ -16,15 +16,13 @@ export default class EventsPresenter {
     this.#pointModel = new PointModel();
     this.#points = [...this.#pointModel.points];
     render(this.#eventsList, this.#eventsContainer);
-    /*
-    render(new AddPointView(
-      this.#points[1],
-      this.#pointModel.getPointOffers(this.#points[1]),
-      this.#pointModel.getPointDestination(this.#points[1])),
-    this.#eventsList.element);
-    */
-    for (let i = 2; i < this.#points.length; i++) {
-      this.#renderPoint(this.#points[i]);
+    if (this.#points.every(() => 0)) {
+      render(new NoPointsView(), this.#eventsList.element);
+    }
+    else {
+      for (let i = 0; i < this.#points.length; i++) {
+        this.#renderPoint(this.#points[i]);
+      }
     }
 
   };
