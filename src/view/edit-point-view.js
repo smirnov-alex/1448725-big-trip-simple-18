@@ -1,6 +1,6 @@
 import AbsractView from '../framework/view/abstract-view.js';
-import { getShortDateAndTimeFromDate } from '../utils.js';
-import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils.js';
+import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
+import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils/point.js';
 
 const createEditPointTemplate = (point, offers, destination) => {
   const { basePrice, dateFrom, dateTo, type } = point;

@@ -1,5 +1,5 @@
 import AbsractView from '../framework/view/abstract-view.js';
-import { getDayFromDate, getFullDateAndTimeFromDate, getFullDateFromDate, getTimeFromDate } from '../utils.js';
+import { getDayFromDate, getFullDateAndTimeFromDate, getFullDateFromDate, getTimeFromDate } from '../utils/dateUtils.js';
 
 const createPointTemplate = (point, offers, destination) => {
   const {basePrice, dateFrom, dateTo, type} = point;
