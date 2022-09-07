@@ -2,7 +2,7 @@ import { generateDestination } from '../mock/destination';
 import { generateOffer } from '../mock/offer';
 import { generatePoint } from '../mock/point';
 
-const NUM_POINTS = 0;
+const NUM_POINTS = 16;
 
 export default class PointModel {
   #points = Array.from({length: NUM_POINTS}, generatePoint);

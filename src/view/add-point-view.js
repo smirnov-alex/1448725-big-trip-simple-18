@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbsractView from '../framework/view/abstract-view.js';
 import { getShortDateAndTimeFromDate } from '../utils.js';
 import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils.js';
 
@@ -87,12 +87,12 @@ const createAddPointTemplate = (point, offers, destination) => {
 </li>`);
 };
 
-export default class AddPointView {
-  #element = null;
+export default class AddPointView extends AbsractView {
   #point = null;
   #offers = null;
   #destination = null;
   constructor(point, offers, destination) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
@@ -100,16 +100,5 @@ export default class AddPointView {
 
   get template() {
     return createAddPointTemplate(this.#point, this.#offers, this.#destination);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

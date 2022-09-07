@@ -1,9 +1,10 @@
+import { render, replace } from '../framework/render.js';
 import EventsListView from '../view/events-list';
 import EditPointView from '../view/edit-point-view';
 import NoPointsView from '../view/no-points-view';
 import PointView from '../view/point-view';
 import PointModel from '../model/point';
-import { render } from '../render.js';
+
 
 export default class EventsPresenter {
   #eventsContainer = null;
@@ -16,7 +17,7 @@ export default class EventsPresenter {
     this.#pointModel = new PointModel();
     this.#points = [...this.#pointModel.points];
     render(this.#eventsList, this.#eventsContainer);
-    if (this.#points.every(() => 0)) {
+    if (this.#points.length === 0) {
       render(new NoPointsView(), this.#eventsList.element);
     }
     else {
@@ -37,10 +38,10 @@ export default class EventsPresenter {
       this.#pointModel.getPointOffers(point),
       this.#pointModel.getPointDestination(point));
     const replacePointToEdit = () => {
-      this.#eventsList.element.replaceChild(editPointComponent.element, pointComponent.element);
+      replace(editPointComponent, pointComponent);
     };
     const replaceEditToPoint = () => {
-      this.#eventsList.element.replaceChild(pointComponent.element, editPointComponent.element);
+      replace(pointComponent, editPointComponent);
     };
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
@@ -49,16 +50,16 @@ export default class EventsPresenter {
         document.removeEventListener('keydown', onEscKeyDown);
       }
     };
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+
+    pointComponent.setEditClickHandler(() => {
       replacePointToEdit();
       document.addEventListener('keydown', onEscKeyDown);
     });
-    editPointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    editPointComponent.setEditClickHandler(() => {
       replaceEditToPoint();
       document.removeEventListener('keydown', onEscKeyDown);
     });
-    editPointComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    editPointComponent.setFormSubmitHandler(() => {
       replaceEditToPoint();
       document.removeEventListener('keydown', onEscKeyDown);
     });
