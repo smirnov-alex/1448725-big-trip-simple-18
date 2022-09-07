@@ -1,18 +1,5 @@
-import dayjs from 'dayjs';
-import { DESTINATIONS, POINT_TYPE, OFFERS_TITLE } from './mock/const.js';
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const getDayFromDate = (date) => dayjs(date).format('MMM D');
-const getTimeFromDate = (date) => dayjs(date).format('HH:mm');
-const getFullDateFromDate = (date) => dayjs(date).format('YYYY-MM-DD');
-const getFullDateAndTimeFromDate = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
-const getShortDateAndTimeFromDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
+import { DESTINATIONS, POINT_TYPE, OFFERS_TITLE } from '../mock/const.js';
+import { getRandomInteger } from './common.js';
 
 const generatePointTypes = () => {
   let pointsTypes = '';
@@ -48,4 +35,4 @@ const generateDestinationOptions = () => {
   return destinationOptions;
 };
 
-export {getRandomInteger, getDayFromDate, getTimeFromDate, getFullDateFromDate, getFullDateAndTimeFromDate, getShortDateAndTimeFromDate, generatePointTypes, generateOffers, generateDestinationOptions};
+export { generatePointTypes, generateOffers, generateDestinationOptions };

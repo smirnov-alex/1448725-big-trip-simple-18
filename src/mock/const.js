@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../utils/common.js';
 import dayjs from 'dayjs';
 
 const POINT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];

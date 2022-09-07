@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../utils/common.js';
 import { generateDate, POINT_TYPE} from './const.js';
 
 export const generatePoint = () => ({
