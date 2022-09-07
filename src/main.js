@@ -1,4 +1,4 @@
-import { render } from './render.js';
+import { render } from './framework/render.js';
 import FilterView from './view/filter-view.js';
 import SortView from './view/sort-view.js';
 import EventsPresenter from './presenter/events-presenter.js';

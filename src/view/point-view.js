@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbsractView from '../framework/view/abstract-view.js';
 import { getDayFromDate, getFullDateAndTimeFromDate, getFullDateFromDate, getTimeFromDate } from '../utils.js';
 
 const createPointTemplate = (point, offers, destination) => {
@@ -47,12 +47,12 @@ const createPointTemplate = (point, offers, destination) => {
 </li>`);
 };
 
-export default class PointView {
-  #element = null;
+export default class PointView extends AbsractView {
   #point = null;
   #offers = null;
   #destination = null;
   constructor(point, offers, destination) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
@@ -62,14 +62,12 @@ export default class PointView {
     return createPointTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #editClickHandler = () => {
+    this._callback.editClick();
+  };
 }
