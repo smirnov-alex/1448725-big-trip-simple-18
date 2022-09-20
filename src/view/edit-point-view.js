@@ -107,7 +107,7 @@ export default class EditPointView extends AbsractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this.#point);
   };
 }
 
