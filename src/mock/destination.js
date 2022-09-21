@@ -1,5 +1,5 @@
 import { getRandomInteger } from '../utils/common.js';
-import { DESTINATIONS, generateDescription, generatePictures } from './const.js';
+import { DESTINATIONS, generateDescription, generatePictures } from '../utils/const.js';
 
 export const generateDestination = (id) => ({
   id,

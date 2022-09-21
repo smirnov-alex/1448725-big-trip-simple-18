@@ -1,5 +1,5 @@
 import { getRandomInteger } from '../utils/common.js';
-import { generateDate, POINT_TYPE} from './const.js';
+import { generateDate, POINT_TYPE} from '../utils/const.js';
 import { nanoid } from 'nanoid';
 
 export const generatePoint = () => ({
