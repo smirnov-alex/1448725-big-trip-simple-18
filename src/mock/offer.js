@@ -1,5 +1,5 @@
 import { getRandomInteger } from '../utils/common.js';
-import { OFFERS_TITLE } from './const.js';
+import { OFFERS_TITLE } from '../utils/const.js';
 
 export const generateOffer = (id) => ({
   id,

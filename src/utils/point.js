@@ -1,5 +1,6 @@
-import { DESTINATIONS, POINT_TYPE, OFFERS_TITLE } from '../mock/const.js';
+import { DESTINATIONS, POINT_TYPE, OFFERS_TITLE } from './const.js';
 import { getRandomInteger } from './common.js';
+import dayjs from 'dayjs';
 
 const generatePointTypes = () => {
   let pointsTypes = '';
@@ -35,4 +36,7 @@ const generateDestinationOptions = () => {
   return destinationOptions;
 };
 
-export { generatePointTypes, generateOffers, generateDestinationOptions };
+const sortPointDate = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+export { generatePointTypes, generateOffers, generateDestinationOptions, sortPointDate, sortPointPrice };

@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils/common.js';
+import { getRandomInteger } from './common.js';
 import dayjs from 'dayjs';
 
 const POINT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
@@ -38,4 +38,10 @@ const generatePictures = () => {
   return pictures;
 };
 
-export {POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures};
+const SortType = {
+  DAY: 'day',
+  PRICE: 'price',
+  DEFAULT: 'default',
+};
+
+export {POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SortType};
