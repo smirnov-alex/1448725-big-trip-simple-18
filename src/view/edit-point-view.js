@@ -1,11 +1,13 @@
-import AbsractView from '../framework/view/abstract-view.js';
+import AbsractStatefulView from '../framework/view/abstract-stateful-view.js';
+import { DEFAULT_POINT } from '../utils/const.js';
+import { getDestination } from '../utils/common.js';
 import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
 import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils/point.js';
 
-const createEditPointTemplate = (point, offers, destination) => {
-  const { basePrice, dateFrom, dateTo, type } = point;
+const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destination }, allDestinations) => {
   const shortDateAndTimeStart = getShortDateAndTimeFromDate(dateFrom);
   const shortDateAndTimeEnd = getShortDateAndTimeFromDate(dateTo);
+  const foundDestination = getDestination(destination, allDestinations);
 
 
   return (`<li class="trip-events__item">
@@ -69,26 +71,29 @@ const createEditPointTemplate = (point, offers, destination) => {
 
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${destination.description}</p>
+        <p class="event__destination-description">${foundDestination.description}</p>
       </section>
     </section>
   </form>
 </li>`);
 };
 
-export default class EditPointView extends AbsractView {
-  #point = null;
-  #offers = null;
-  #destination = null;
-  constructor(point, offers, destination) {
+export default class EditPointView extends AbsractStatefulView {
+  #allOffers = null;
+  #allDestinations = null;
+  constructor(point = DEFAULT_POINT, allOffers = [], allDestinations = []) {
     super();
-    this.#point = point;
-    this.#offers = offers;
-    this.#destination = destination;
+    this._state = EditPointView.parsePointToState(point);
+    this.#allOffers = allOffers;
+    this.#allDestinations = allDestinations;
+    this.#setInnerHandlers();
   }
 
+  static parsePointToState = (point) => ({...point});
+  static parseStateToPoint = (state) => ({...state});
+
   get template() {
-    return createEditPointTemplate(this.#point, this.#offers, this.#destination);
+    return createEditPointTemplate(this._state, this.#allOffers, this.#allDestinations);
   }
 
   setEditClickHandler = (callback) => {
@@ -107,7 +112,65 @@ export default class EditPointView extends AbsractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(this.#point);
+    this._callback.formSubmit(EditPointView.parseStateToPoint(this._state));
+  };
+
+  #eventTypeHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value,
+      offers: [],
+    });
+  };
+
+  #eventDestinationHandler = (evt) => {
+    evt.preventDefault();
+    if (evt.target.value !== '') {
+      this.updateElement({
+        destination: this.#allDestinations.find((destination) => evt.target.value === destination.name).id,
+      });
+    }
+  };
+
+  #eventPriceHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      basePrice: evt.target.value,
+    });
+  };
+
+  #eventTimeStartHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      dateFrom: evt.target.value,
+    });
+  };
+
+  #eventTimeEndHandler = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      dateTo: evt.target.value,
+    });
+  };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setEditClickHandler(this._callback.editClick);
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#eventPriceHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeHandler);
+    this.element.querySelector('#event-start-time-1').addEventListener('change', this.#eventTimeStartHandler);
+    this.element.querySelector('#event-end-time-1').addEventListener('change', this.#eventTimeEndHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#eventDestinationHandler);
+  };
+
+  reset = (point) => {
+    this.updateElement(
+      EditPointView.parsePointToState(point),
+    );
   };
 }
 

@@ -19,4 +19,6 @@ const updateItem = (items, update) => {
   ];
 };
 
-export { getRandomInteger, updateItem };
+const getDestination = (idDestination, allDestinations) => allDestinations.find((destinationItem) => destinationItem.id === idDestination);
+
+export { getRandomInteger, updateItem, getDestination };
