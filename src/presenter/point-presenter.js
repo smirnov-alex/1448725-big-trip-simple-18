@@ -35,10 +35,11 @@ export default class PointPresenter {
       point,
       this.#pointModel.getPointOffers(point),
       this.#pointModel.getPointDestination(point));
+
     this.#editPointComponent = new EditPointView(
       point,
-      this.#pointModel.allOffers,
-      this.#pointModel.allDestinations);
+      this.#pointModel.allDestinations,
+      this.#pointModel.allOffers);
 
     this.#pointComponent.setEditClickHandler(this.#setEditClickHandler);
     this.#editPointComponent.setFormSubmitHandler(this.#setFormSubmitHandler);

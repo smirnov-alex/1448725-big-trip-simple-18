@@ -4,10 +4,11 @@ import { getDestination } from '../utils/common.js';
 import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
 import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils/point.js';
 
-const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destination }, allDestinations) => {
+const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, offers, destination}, allOffers, allDestinations ) => {
   const shortDateAndTimeStart = getShortDateAndTimeFromDate(dateFrom);
   const shortDateAndTimeEnd = getShortDateAndTimeFromDate(dateTo);
   const foundDestination = getDestination(destination, allDestinations);
+  //console.log(allOffers);
 
 
   return (`<li class="trip-events__item">
@@ -32,7 +33,7 @@ const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destinatio
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${destination.name} list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${foundDestination.name} list="destination-list-1">
         <datalist id="destination-list-1">
           ${generateDestinationOptions()}
         </datalist>
@@ -79,13 +80,14 @@ const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destinatio
 };
 
 export default class EditPointView extends AbsractStatefulView {
-  #allOffers = null;
   #allDestinations = null;
-  constructor(point = DEFAULT_POINT, allOffers = [], allDestinations = []) {
+  #allOffers = null;
+
+  constructor(point = DEFAULT_POINT, allDestinations = [], allOffers = []) {
     super();
     this._state = EditPointView.parsePointToState(point);
-    this.#allOffers = allOffers;
     this.#allDestinations = allDestinations;
+    this.#allOffers = allOffers;
     this.#setInnerHandlers();
   }
 

@@ -20,5 +20,6 @@ const updateItem = (items, update) => {
 };
 
 const getDestination = (idDestination, allDestinations) => allDestinations.find((destinationItem) => destinationItem.id === idDestination);
+const getOffersByType = (typeOffer, allOffers) => allOffers.find((offer) => offer.type === typeOffer).offers;
 
-export { getRandomInteger, updateItem, getDestination };
+export { getRandomInteger, updateItem, getDestination, getOffersByType };

@@ -8,7 +8,7 @@ export const generatePoint = () => ({
   'dateTo': generateDate(),
   'destination': getRandomInteger(1, DESTINATIONS.length),
   'id': nanoid(),
-  'offers': [1,2,3],
+  'offers': Array.from(new Set([getRandomInteger(1, 4), getRandomInteger(1, 4), getRandomInteger(1, 4), getRandomInteger(1, 4)])),
   'type': POINT_TYPE[getRandomInteger(0, POINT_TYPE.length - 1)],
 }
 );
