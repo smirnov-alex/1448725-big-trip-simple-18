@@ -12,7 +12,7 @@ const createPointTemplate = (point, offers, destination) => {
 
   // eslint-disable-next-line no-shadow
   const generateOffersTemplate = () => {
-    console.log(offers);
+    //console.log(offers);
     if (offers.length === 0) {
       return ` <li class="event__offer">
       <span class="event__offer-title">No additional offers</span>

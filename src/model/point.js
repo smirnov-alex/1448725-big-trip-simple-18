@@ -22,12 +22,13 @@ export default class PointModel {
     return this.#allOffers;
   }
 
-  getPointOffers = (point) => point.offers.map((offerId) =>
-    this.#allOffers.find((offer) => offer.id === offerId)
-  );
+    getPointOffers = (point) => point.offers.map((offerId) =>
+      this.#allOffers.find((offer) => offer.id === offerId)
+    );
+  
 
-  /*
-    getPointOffers = (point) => getOffersByType(point.offers, this.#allOffers).filter((offer) => point.offers.includes(offer.id));
-  */
+/*
+  getPointOffers = (point) => getOffersByType(point.offers, this.#allOffers).filter((offer) => point.offers.includes(offer.id));
+*/
   getPointDestination = (point) => getDestination(point.destination, this.#allDestinations);
 }

@@ -1,13 +1,15 @@
 import { getRandomInteger } from '../utils/common.js';
 import { OFFERS_TITLE, POINT_TYPE } from '../utils/const.js';
-/*
+
 export const generateOffer = (id) => ({
   id,
   'title': OFFERS_TITLE[getRandomInteger(0, OFFERS_TITLE.length - 1)],
   'price': getRandomInteger(20, 200)
 }
 );
-*/
+
+
+/*
 export const generateOffer = () => {
   const offersArrayByType = [];
   POINT_TYPE.forEach((type) => {
@@ -28,3 +30,4 @@ export const generateOffer = () => {
 };
 
 //console.log(generateOffer());
+*/
