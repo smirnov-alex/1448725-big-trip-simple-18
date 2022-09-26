@@ -3,8 +3,10 @@ import { DEFAULT_POINT } from '../utils/const.js';
 import { getDestination } from '../utils/common.js';
 import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
 import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils/point.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
-const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destination}, allOffers, allDestinations ) => {
+const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destination }, allOffers, allDestinations) => {
   const shortDateAndTimeStart = getShortDateAndTimeFromDate(dateFrom);
   const shortDateAndTimeEnd = getShortDateAndTimeFromDate(dateTo);
   const foundDestination = getDestination(destination, allDestinations);
@@ -82,6 +84,8 @@ const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destinatio
 export default class EditPointView extends AbsractStatefulView {
   #allDestinations = null;
   #allOffers = null;
+  #datepickerStart = null;
+  #datepickerEnd = null;
 
   constructor(point = DEFAULT_POINT, allDestinations = [], allOffers = []) {
     super();
@@ -89,10 +93,12 @@ export default class EditPointView extends AbsractStatefulView {
     this.#allDestinations = allDestinations;
     this.#allOffers = allOffers;
     this.#setInnerHandlers();
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
   }
 
-  static parsePointToState = (point) => ({...point});
-  static parseStateToPoint = (state) => ({...state});
+  static parsePointToState = (point) => ({ ...point });
+  static parseStateToPoint = (state) => ({ ...state });
 
   get template() {
     return createEditPointTemplate(this._state, this.#allOffers, this.#allDestinations);
@@ -141,31 +147,55 @@ export default class EditPointView extends AbsractStatefulView {
     });
   };
 
-  #eventTimeStartHandler = (evt) => {
-    evt.preventDefault();
+  #eventDateStartHandler = ([userDate]) => {
     this.updateElement({
-      dateFrom: evt.target.value,
+      dateFrom: userDate,
     });
   };
 
-  #eventTimeEndHandler = (evt) => {
-    evt.preventDefault();
+  #eventDateEndHandler = ([userDate]) => {
     this.updateElement({
-      dateTo: evt.target.value,
+      dateTo: userDate,
     });
+  };
+
+  #setDatepickerStart = () => {
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        'time_24hr': true,
+        dateFormat: 'd/m/y H:i',
+        maxDate: this._state.dateTo,
+        onChange: this.#eventDateStartHandler,
+      },
+    );
+  };
+
+  #setDatepickerEnd = () => {
+    this.#datepickerEnd = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        'time_24hr': true,
+        dateFormat: 'd/m/y H:i',
+        minDate: this._state.dateFrom,
+        onChange: this.#eventDateEndHandler,
+      },
+    );
   };
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEditClickHandler(this._callback.editClick);
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
   };
 
   #setInnerHandlers = () => {
     this.element.querySelector('.event__input--price').addEventListener('change', this.#eventPriceHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeHandler);
-    this.element.querySelector('#event-start-time-1').addEventListener('change', this.#eventTimeStartHandler);
-    this.element.querySelector('#event-end-time-1').addEventListener('change', this.#eventTimeEndHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#eventDestinationHandler);
   };
 
@@ -173,6 +203,20 @@ export default class EditPointView extends AbsractStatefulView {
     this.updateElement(
       EditPointView.parsePointToState(point),
     );
+  };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+
+    if (this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
   };
 }
 
