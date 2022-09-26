@@ -23,14 +23,22 @@ const generateDescription = () => {
 };
 
 const MAXDAYSGAP = 7;
+
 const PRICE = {
   MIN: 1000,
   MAX: 5000,
 };
+
+const OFFER_PRICE = {
+  MIN: 20,
+  MAX: 200,
+};
+
 const COUNT_PICTURES = {
   MIN: 2,
   MAX: 5,
 };
+
 const NUM_FOR_PICTURES = {
   MIN: 1,
   MAX: 200,
@@ -69,4 +77,4 @@ const SortType = {
   DEFAULT: 'default',
 };
 
-export {POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SortType, DEFAULT_POINT, PRICE};
+export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SortType, DEFAULT_POINT, PRICE, OFFER_PRICE };

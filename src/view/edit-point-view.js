@@ -1,16 +1,43 @@
 import AbsractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { DEFAULT_POINT } from '../utils/const.js';
-import { getDestination } from '../utils/common.js';
+import { DEFAULT_POINT, POINT_TYPE } from '../utils/const.js';
+import { getDestination, getLastWord, getOffersByType } from '../utils/common.js';
 import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
-import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils/point.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destination }, allOffers, allDestinations) => {
+const createEditPointTemplate = ({ type, basePrice, dateFrom, dateTo, offers, destination }, allOffers, allDestinations) => {
   const shortDateAndTimeStart = getShortDateAndTimeFromDate(dateFrom);
   const shortDateAndTimeEnd = getShortDateAndTimeFromDate(dateTo);
   const foundDestination = getDestination(destination, allDestinations);
-  //console.log(allOffers);
+  const offersByType = getOffersByType(type, allOffers);
+
+  const createPointTypesTemplate = () => (POINT_TYPE.map((pointType) => {
+    const checked = type === pointType ? 'checked' : '';
+    return `<div class="event__type-item">
+    <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointType} ${checked}>
+    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${pointType[0].toUpperCase() + pointType.substring(1)}</label>
+  </div>`;
+  }
+  ).join(''));
+
+  const createDestinationOptionTemplate = () => (allDestinations.map((destinationItem) => (
+    `<option value="${destinationItem.name}"></option>`
+  )).join(''));
+
+  const createOfferTemplate = () => (offersByType.map(({ id, title, price }) => {
+    const nameOffer = getLastWord(title);
+    const idOffer = `${nameOffer}-${id}`;
+    const checked = offers.includes(id) ? 'checked' : '';
+    const dataAttribute = `data-id-offer="${id}"`;
+    return `<div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${idOffer}" type="checkbox" name="event-offer-${nameOffer}" ${checked} ${dataAttribute}>
+            <label class="event__offer-label" for="event-offer-${idOffer}">
+              <span class="event__offer-title">${title}</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">${price}</span>
+            </label>
+        </div>`;
+  }).join(''));
 
 
   return (`<li class="trip-events__item">
@@ -26,7 +53,7 @@ const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destinatio
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
-            ${generatePointTypes()}
+            ${createPointTypesTemplate()}
           </fieldset>
         </div>
       </div>
@@ -37,7 +64,7 @@ const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destinatio
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${foundDestination.name} list="destination-list-1">
         <datalist id="destination-list-1">
-          ${generateDestinationOptions()}
+          ${createDestinationOptionTemplate()}
         </datalist>
       </div>
 
@@ -68,7 +95,7 @@ const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destinatio
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-        ${generateOffers()}
+        ${createOfferTemplate()}
         </div>
       </section>
 
@@ -185,6 +212,20 @@ export default class EditPointView extends AbsractStatefulView {
     );
   };
 
+  #eventOfferHandler = (evt) => {
+    evt.preventDefault();
+    const newOffers = this._state.offers.slice();
+    const idOffer = Number(evt.target.dataset.idOffer);
+    if (evt.target.checked) {
+      newOffers.push(idOffer);
+    } else {
+      newOffers.splice(newOffers.indexOf(idOffer), 1);
+    }
+    this.updateElement({
+      offers: newOffers,
+    });
+  };
+
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
@@ -197,6 +238,7 @@ export default class EditPointView extends AbsractStatefulView {
     this.element.querySelector('.event__input--price').addEventListener('change', this.#eventPriceHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#eventDestinationHandler);
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#eventOfferHandler);
   };
 
   reset = (point) => {
