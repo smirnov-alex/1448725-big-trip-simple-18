@@ -35,10 +35,12 @@ export default class PointPresenter {
       point,
       this.#pointModel.getPointOffers(point),
       this.#pointModel.getPointDestination(point));
+
     this.#editPointComponent = new EditPointView(
       point,
-      this.#pointModel.getPointOffers(point),
-      this.#pointModel.getPointDestination(point));
+      this.#pointModel.allDestinations,
+      this.#pointModel.allOffers);
+
     this.#pointComponent.setEditClickHandler(this.#setEditClickHandler);
     this.#editPointComponent.setFormSubmitHandler(this.#setFormSubmitHandler);
     this.#editPointComponent.setEditClickHandler(this.#setCloseClickHandler);
@@ -67,6 +69,7 @@ export default class PointPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#editPointComponent.reset(this.#point);
       this.#replaceEditToPoint();
     }
   };
@@ -87,6 +90,7 @@ export default class PointPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#editPointComponent.reset(this.#point);
       this.#replaceEditToPoint();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     }
@@ -102,6 +106,7 @@ export default class PointPresenter {
   };
 
   #setCloseClickHandler = () => {
+    this.#editPointComponent.reset(this.#point);
     this.#replaceEditToPoint();
   };
 }

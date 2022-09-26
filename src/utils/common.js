@@ -19,4 +19,11 @@ const updateItem = (items, update) => {
   ];
 };
 
-export { getRandomInteger, updateItem };
+const getDestination = (idDestination, allDestinations) => allDestinations.find((destinationItem) => destinationItem.id === idDestination);
+const getOffersByType = (typeOffer, allOffers) => allOffers.find((offer) => offer.type === typeOffer).offers;
+const getLastWord = (string) => {
+  const wordArray = string.split(' ');
+  return wordArray[wordArray.length - 1];
+};
+
+export { getRandomInteger, updateItem, getDestination, getOffersByType, getLastWord };

@@ -1,10 +1,13 @@
-import { getRandomInteger } from '../utils/common.js';
 import { DESTINATIONS, generateDescription, generatePictures } from '../utils/const.js';
 
-export const generateDestination = (id) => ({
+const generateDestination = (id) => ({
   id,
   'description': generateDescription(),
-  'name': DESTINATIONS[getRandomInteger(0, DESTINATIONS.length - 1)],
+  'name': DESTINATIONS[id - 1],
   'pictures': generatePictures(),
 }
 );
+
+const generateDestinations = () => Array.from({ length: DESTINATIONS.length }, (_value, index) => generateDestination(index + 1));
+
+export { generateDestinations };

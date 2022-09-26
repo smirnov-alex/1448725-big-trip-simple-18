@@ -21,16 +21,49 @@ const generateDescription = () => {
 
   return descriptions[getRandomInteger(0, descriptions.length - 1)];
 };
+
+const MAXDAYSGAP = 7;
+
+const PRICE = {
+  MIN: 1000,
+  MAX: 5000,
+};
+
+const OFFER_PRICE = {
+  MIN: 20,
+  MAX: 200,
+};
+
+const COUNT_PICTURES = {
+  MIN: 2,
+  MAX: 5,
+};
+
+const NUM_FOR_PICTURES = {
+  MIN: 1,
+  MAX: 200,
+};
+
+const DEFAULT_POINT = {
+  id: 0,
+  basePrice: 0,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  offers: [],
+  type: POINT_TYPE[0],
+};
+
+
 const generateDate = () => {
-  const maxDaysGap = 7;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const daysGap = getRandomInteger(-MAXDAYSGAP, MAXDAYSGAP);
   return dayjs().add(daysGap, 'day').toDate();
 };
 const generatePictures = () => {
   const pictures = [];
-  for (let i = 0; i < getRandomInteger(2,5); i++) {
+  for (let i = 0; i < getRandomInteger(COUNT_PICTURES.MIN, COUNT_PICTURES.MAX); i++) {
     const picture = {
-      'src': `http://picsum.photos/248/152?r=${getRandomInteger(1, 200)}`,
+      'src': `http://picsum.photos/248/152?r=${getRandomInteger(NUM_FOR_PICTURES.MIN, NUM_FOR_PICTURES.MAX)}`,
       'description': generateDescription(),
     };
     pictures.push(picture);
@@ -44,4 +77,4 @@ const SortType = {
   DEFAULT: 'default',
 };
 
-export {POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SortType};
+export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SortType, DEFAULT_POINT, PRICE, OFFER_PRICE };

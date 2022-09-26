@@ -2,7 +2,7 @@ import AbsractView from '../framework/view/abstract-view.js';
 import { getDayFromDate, getFullDateAndTimeFromDate, getFullDateFromDate, getTimeFromDate } from '../utils/dateUtils.js';
 
 const createPointTemplate = (point, offers, destination) => {
-  const {basePrice, dateFrom, dateTo, type} = point;
+  const { basePrice, dateFrom, dateTo, type } = point;
   const dateStart = getDayFromDate(dateFrom);
   const timeStart = getTimeFromDate(dateFrom);
   const timeEnd = getTimeFromDate(dateTo);
@@ -11,12 +11,20 @@ const createPointTemplate = (point, offers, destination) => {
   const fullDateAndTimeEnd = getFullDateAndTimeFromDate(dateTo);
 
   // eslint-disable-next-line no-shadow
-  const generateOffersTemplate = (offers) => `${offers.map((offer) => `
+  const generateOffersTemplate = () => {
+    //console.log(offers);
+    if (offers.length === 0) {
+      return ` <li class="event__offer">
+      <span class="event__offer-title">No additional offers</span>
+      </li>`;
+    }
+    return offers.map((offer) => `
   <li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer.price}</span>
-  </li>`).join('')}`;
+  </li>`).join('');
+  };
 
 
   return (`<li class="trip-events__item">
