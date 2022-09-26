@@ -4,7 +4,7 @@ import { getDestination } from '../utils/common.js';
 import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
 import { generateOffers, generatePointTypes, generateDestinationOptions } from '../utils/point.js';
 
-const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, offers, destination}, allOffers, allDestinations ) => {
+const createEditPointTemplate = ({ basePrice, dateFrom, dateTo, type, destination}, allOffers, allDestinations ) => {
   const shortDateAndTimeStart = getShortDateAndTimeFromDate(dateFrom);
   const shortDateAndTimeEnd = getShortDateAndTimeFromDate(dateTo);
   const foundDestination = getDestination(destination, allDestinations);

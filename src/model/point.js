@@ -1,7 +1,7 @@
 import { generateDestination } from '../mock/destination';
 import { generateOffer } from '../mock/offer';
 import { generatePoint } from '../mock/point';
-import { getDestination, getOffersByType } from '../utils/common.js';
+import { getDestination } from '../utils/common.js';
 
 const NUM_POINTS = 6;
 
@@ -22,13 +22,12 @@ export default class PointModel {
     return this.#allOffers;
   }
 
-    getPointOffers = (point) => point.offers.map((offerId) =>
-      this.#allOffers.find((offer) => offer.id === offerId)
-    );
-  
+  getPointOffers = (point) => point.offers.map((offerId) =>
+    this.#allOffers.find((offer) => offer.id === offerId)
+  );
 
-/*
-  getPointOffers = (point) => getOffersByType(point.offers, this.#allOffers).filter((offer) => point.offers.includes(offer.id));
-*/
+  /*
+    getPointOffers = (point) => getOffersByType(point.offers, this.#allOffers).filter((offer) => point.offers.includes(offer.id));
+  */
   getPointDestination = (point) => getDestination(point.destination, this.#allDestinations);
 }
