@@ -1,3 +1,6 @@
+import dayjs from 'dayjs';
+import { FILTER_TYPE } from '../utils/const.js';
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -26,4 +29,14 @@ const getLastWord = (string) => {
   return wordArray[wordArray.length - 1];
 };
 
-export { getRandomInteger, updateItem, getDestination, getOffersByType, getLastWord };
+const isFutureDate = (dateStart, dateEnd) => dayjs().isBefore(dayjs(dateStart), 'day') || dayjs().isBefore(dayjs(dateEnd), 'day');
+
+const filter = {
+  [FILTER_TYPE.EVERYTHING]: (points) => points,
+  [FILTER_TYPE.FUTURE]: (points) => points.filter((point) => isFutureDate(point.dateTo, point.dateFrom)),
+};
+
+const sortPointDate = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+export { getRandomInteger, updateItem, getDestination, getOffersByType, getLastWord, sortPointDate, sortPointPrice, filter };

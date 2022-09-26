@@ -71,10 +71,15 @@ const generatePictures = () => {
   return pictures;
 };
 
-const SortType = {
+const SORT_TYPE = {
   DAY: 'day',
   PRICE: 'price',
   DEFAULT: 'default',
 };
 
-export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SortType, DEFAULT_POINT, PRICE, OFFER_PRICE };
+const FILTER_TYPE = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future'
+};
+
+export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE };
