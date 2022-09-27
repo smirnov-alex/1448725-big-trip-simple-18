@@ -62,7 +62,7 @@ const createEditPointTemplate = ({ type, basePrice, dateFrom, dateTo, offers, de
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${foundDestination.name} list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${foundDestination.name}" list="destination-list-1">
         <datalist id="destination-list-1">
           ${createDestinationOptionTemplate()}
         </datalist>
@@ -81,7 +81,7 @@ const createEditPointTemplate = ({ type, basePrice, dateFrom, dateTo, offers, de
           <span class="visually-hidden">${basePrice}</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value=${basePrice}>
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" pattern ='^[0-9]+$' value=${basePrice}>
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

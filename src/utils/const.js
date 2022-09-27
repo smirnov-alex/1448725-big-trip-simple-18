@@ -64,7 +64,7 @@ const generatePictures = () => {
   const pictures = [];
   for (let i = 0; i < getRandomInteger(COUNT_PICTURES.MIN, COUNT_PICTURES.MAX); i++) {
     const picture = {
-      'src': `http://picsum.photos/248/152?r=${getRandomInteger(NUM_FOR_PICTURES.MIN, NUM_FOR_PICTURES.MAX)}`,
+      'src': `http://loremflickr.com/248/152?lock=${getRandomInteger(NUM_FOR_PICTURES.MIN, NUM_FOR_PICTURES.MAX)}`,
       'description': generateDescription(),
     };
     pictures.push(picture);
