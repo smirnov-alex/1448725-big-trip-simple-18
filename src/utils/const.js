@@ -82,4 +82,16 @@ const FILTER_TYPE = {
   FUTURE: 'future'
 };
 
-export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE };
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE, UserAction, UpdateType };
