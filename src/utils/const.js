@@ -59,6 +59,7 @@ const generateDate = () => {
   const daysGap = getRandomInteger(-MAXDAYSGAP, MAXDAYSGAP);
   return dayjs().add(daysGap, 'day').toDate();
 };
+
 const generatePictures = () => {
   const pictures = [];
   for (let i = 0; i < getRandomInteger(COUNT_PICTURES.MIN, COUNT_PICTURES.MAX); i++) {
@@ -82,6 +83,13 @@ const FILTER_TYPE = {
   FUTURE: 'future'
 };
 
+const isFutureDate = (dateStart, dateEnd) => dayjs().isBefore(dayjs(dateStart), 'minute') || dayjs().isBefore(dayjs(dateEnd), 'minute');
+
+const filter = {
+  [FILTER_TYPE.EVERYTHING]: (points) => points,
+  [FILTER_TYPE.FUTURE]: (points) => points.filter((point) => isFutureDate(point.dateFrom, point.dateTo)),
+};
+
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
@@ -94,4 +102,4 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE, UserAction, UpdateType };
+export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE, filter, UserAction, UpdateType };

@@ -3,32 +3,39 @@ import EventsListView from '../view/events-list';
 import NoPointsView from '../view/no-points-view';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
-import { SORT_TYPE, UpdateType, UserAction } from '../utils/const.js';
+import { SORT_TYPE, UpdateType, UserAction, filter, FILTER_TYPE } from '../utils/const.js';
 import { sortPointDate, sortPointPrice } from '../utils/common.js';
 
 export default class EventsPresenter {
   #eventsContainer = null;
   #pointModel = null;
+  #filterModel = null;
   #eventsListComponent = new EventsListView();
-  #noPointsComponent = new NoPointsView();
+  #noPointsComponent = null;
   #sortComponent = null;
   #pointPresenter = new Map();
   #currentSortType = SORT_TYPE.DEFAULT;
+  #filterType = FILTER_TYPE.EVERYTHING;
 
-  constructor(eventsContainer, pointModel) {
+  constructor(eventsContainer, pointModel, filterModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointModel = pointModel;
+    this.#filterModel = filterModel;
     this.#pointModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointModel.points;
+    const filteredPoints = filter[this.#filterType](points);
     switch (this.#currentSortType) {
       case SORT_TYPE.DAY:
-        return [...this.#pointModel.points].sort(sortPointDate);
+        return filteredPoints.sort(sortPointDate);
       case SORT_TYPE.PRICE:
-        return [...this.#pointModel.points].sort(sortPointPrice);
+        return filteredPoints.sort(sortPointPrice);
     }
-    return this.#pointModel.points;
+    return filteredPoints;
   }
 
   init = () => {
@@ -64,13 +71,14 @@ export default class EventsPresenter {
         this.#renderMain();
         break;
       case UpdateType.MAJOR:
-        this.#clearMain({resetSortType: true});
+        this.#clearMain({ resetSortType: true });
         this.#renderMain();
         break;
     }
   };
 
   #renderNoPoints = () => {
+    this.#noPointsComponent = new NoPointsView(this.#filterType);
     render(this.#noPointsComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   };
 
@@ -121,7 +129,10 @@ export default class EventsPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
-    remove(this.#noPointsComponent);
+
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SORT_TYPE.DEFAULT;
