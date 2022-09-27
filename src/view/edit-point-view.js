@@ -62,7 +62,7 @@ const createEditPointTemplate = ({ type, basePrice, dateFrom, dateTo, offers, de
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${foundDestination.name} list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${foundDestination.name}" list="destination-list-1">
         <datalist id="destination-list-1">
           ${createDestinationOptionTemplate()}
         </datalist>
@@ -81,7 +81,7 @@ const createEditPointTemplate = ({ type, basePrice, dateFrom, dateTo, offers, de
           <span class="visually-hidden">${basePrice}</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value=${basePrice}>
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" pattern ='^[0-9]+$' value=${basePrice}>
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -143,6 +143,16 @@ export default class EditPointView extends AbsractStatefulView {
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+  };
+
+  #deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(EditPointView.parseStateToPoint(this._state));
   };
 
   #formSubmitHandler = (evt) => {
@@ -230,6 +240,7 @@ export default class EditPointView extends AbsractStatefulView {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setEditClickHandler(this._callback.editClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
   };

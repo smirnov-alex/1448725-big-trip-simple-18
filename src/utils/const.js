@@ -59,11 +59,12 @@ const generateDate = () => {
   const daysGap = getRandomInteger(-MAXDAYSGAP, MAXDAYSGAP);
   return dayjs().add(daysGap, 'day').toDate();
 };
+
 const generatePictures = () => {
   const pictures = [];
   for (let i = 0; i < getRandomInteger(COUNT_PICTURES.MIN, COUNT_PICTURES.MAX); i++) {
     const picture = {
-      'src': `http://picsum.photos/248/152?r=${getRandomInteger(NUM_FOR_PICTURES.MIN, NUM_FOR_PICTURES.MAX)}`,
+      'src': `http://loremflickr.com/248/152?lock=${getRandomInteger(NUM_FOR_PICTURES.MIN, NUM_FOR_PICTURES.MAX)}`,
       'description': generateDescription(),
     };
     pictures.push(picture);
@@ -82,4 +83,23 @@ const FILTER_TYPE = {
   FUTURE: 'future'
 };
 
-export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE };
+const isFutureDate = (dateStart, dateEnd) => dayjs().isBefore(dayjs(dateStart), 'minute') || dayjs().isBefore(dayjs(dateEnd), 'minute');
+
+const filter = {
+  [FILTER_TYPE.EVERYTHING]: (points) => points,
+  [FILTER_TYPE.FUTURE]: (points) => points.filter((point) => isFutureDate(point.dateFrom, point.dateTo)),
+};
+
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE, filter, UserAction, UpdateType };
