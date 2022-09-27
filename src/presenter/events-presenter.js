@@ -18,7 +18,6 @@ export default class EventsPresenter {
   constructor(eventsContainer, pointModel) {
     this.#eventsContainer = eventsContainer;
     this.#pointModel = pointModel;
-
     this.#pointModel.addObserver(this.#handleModelEvent);
   }
 
@@ -61,12 +60,10 @@ export default class EventsPresenter {
         this.#pointPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // need new methods
         this.#clearMain();
         this.#renderMain();
         break;
       case UpdateType.MAJOR:
-        // need new methods
         this.#clearMain({resetSortType: true});
         this.#renderMain();
         break;
@@ -115,7 +112,7 @@ export default class EventsPresenter {
     else {
       this.#renderEventsList();
       this.#renderSortView();
-      this.#renderPoints();
+      this.#renderPoints(this.points);
     }
   };
 
