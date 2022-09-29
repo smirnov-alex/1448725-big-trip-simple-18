@@ -100,6 +100,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export { POINT_TYPE, DESTINATIONS, OFFERS_TITLE, generateDescription, generateDate, generatePictures, SORT_TYPE, DEFAULT_POINT, PRICE, OFFER_PRICE, FILTER_TYPE, filter, UserAction, UpdateType };

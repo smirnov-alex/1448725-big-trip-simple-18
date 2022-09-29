@@ -1,10 +1,9 @@
 import { render, replace, remove } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view';
 import PointView from '../view/point-view';
-import PointModel from '../model/point';
 import { UpdateType, UserAction } from '../utils/const.js';
 import { isDateEqual } from '../utils/dateUtils.js';
-
+import { getDestination, getOffers } from '../utils/common.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -20,9 +19,10 @@ export default class PointPresenter {
   #editPointComponent = null;
   #point = null;
   #mode = Mode.DEFAULT;
-  #pointModel = new PointModel();
+  #pointModel = null;
 
-  constructor(eventsListContainer, changeData, changeMode) {
+  constructor(pointModel, eventsListContainer, changeData, changeMode) {
+    this.#pointModel = pointModel;
     this.#eventsListContainer = eventsListContainer;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
@@ -32,11 +32,10 @@ export default class PointPresenter {
     this.#point = point;
     const prevPointComponent = this.#pointComponent;
     const prevEditPointComponent = this.#editPointComponent;
-
     this.#pointComponent = new PointView(
       point,
-      this.#pointModel.getPointOffers(point),
-      this.#pointModel.getPointDestination(point));
+      getOffers(point, this.#pointModel.allOffers),
+      getDestination(point.destination, this.#pointModel.allDestinations));
 
     this.#editPointComponent = new EditPointView(
       point,

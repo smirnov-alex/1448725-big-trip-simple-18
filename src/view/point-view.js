@@ -2,13 +2,14 @@ import AbsractView from '../framework/view/abstract-view.js';
 import { getDayFromDate, getFullDateAndTimeFromDate, getFullDateFromDate, getTimeFromDate } from '../utils/dateUtils.js';
 
 const createPointTemplate = (point, offers, destination) => {
-  const { basePrice, dateFrom, dateTo, type } = point;
+  const { basePrice, dateFrom, dateTo, type} = point;
   const dateStart = getDayFromDate(dateFrom);
   const timeStart = getTimeFromDate(dateFrom);
   const timeEnd = getTimeFromDate(dateTo);
   const fullDate = getFullDateFromDate(dateFrom);
   const fullDateAndTimeStart = getFullDateAndTimeFromDate(dateFrom);
   const fullDateAndTimeEnd = getFullDateAndTimeFromDate(dateTo);
+  const destinationName = destination === undefined ? '' : destination.name;
 
   // eslint-disable-next-line no-shadow
   const generateOffersTemplate = () => {
@@ -33,7 +34,7 @@ const createPointTemplate = (point, offers, destination) => {
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">${type} ${destination.name}</h3>
+    <h3 class="event__title">${type} ${destinationName}</h3>
     <div class="event__schedule">
       <p class="event__time">
         <time class="event__start-time" datetime="${fullDateAndTimeStart}">${timeStart}</time>
@@ -58,17 +59,18 @@ const createPointTemplate = (point, offers, destination) => {
 export default class PointView extends AbsractView {
   #point = null;
   #offers = null;
-  #destination = null;
-  constructor(point, offers, destination) {
+  #destinations = null;
+  constructor(point, offers, destinations) {
     super();
     this.#point = point;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
   }
 
   get template() {
-    return createPointTemplate(this.#point, this.#offers, this.#destination);
+    return createPointTemplate(this.#point, this.#offers, this.#destinations);
   }
+
 
   setEditClickHandler = (callback) => {
     this._callback.editClick = callback;

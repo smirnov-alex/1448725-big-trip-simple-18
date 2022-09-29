@@ -7,8 +7,9 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const getDestination = (idDestination, allDestinations) => allDestinations.find((destinationItem) => destinationItem.id === idDestination);
+const getDestination = (id, destinations) => destinations.find((item) => item.id === id);
 const getOffersByType = (typeOffer, allOffers) => allOffers.find((offer) => offer.type === typeOffer).offers;
+const getOffers = (point, offers) => getOffersByType(point.type, offers).filter((offer) => point.offers.includes(offer.id));
 const getLastWord = (string) => {
   const wordArray = string.split(' ');
   return wordArray[wordArray.length - 1];
@@ -17,4 +18,4 @@ const getLastWord = (string) => {
 const sortPointDate = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
-export { getRandomInteger, getDestination, getOffersByType, getLastWord, sortPointDate, sortPointPrice };
+export { getRandomInteger, getDestination, getOffersByType, getOffers, getLastWord, sortPointDate, sortPointPrice };
