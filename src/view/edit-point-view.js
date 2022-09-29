@@ -5,7 +5,8 @@ import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-const createEditPointTemplate = ({ type, basePrice, dateFrom, dateTo, offers, destination }, allOffers, allDestinations) => {
+const createEditPointTemplate = (point, allOffers, allDestinations) => {
+  const { type, basePrice, dateFrom, dateTo, offers, destination } = point;
   const shortDateAndTimeStart = getShortDateAndTimeFromDate(dateFrom);
   const shortDateAndTimeEnd = getShortDateAndTimeFromDate(dateTo);
   const foundDestination = getDestination(destination, allDestinations);
@@ -180,7 +181,7 @@ export default class EditPointView extends AbsractStatefulView {
   #eventPriceHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      basePrice: evt.target.value,
+      basePrice: Number(evt.target.value),
     });
   };
 

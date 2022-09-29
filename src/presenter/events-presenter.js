@@ -1,6 +1,7 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import EventsListView from '../view/events-list';
 import NoPointsView from '../view/no-points-view';
+import LoadingView from '../view/loading-view';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 import AddPointPresenter from './add-point-presenter.js';
@@ -13,11 +14,13 @@ export default class EventsPresenter {
   #filterModel = null;
   #eventsListComponent = new EventsListView();
   #noPointsComponent = null;
+  #loadingComponent = new LoadingView();
   #sortComponent = null;
   #pointPresenter = new Map();
   #addPointPresenter = null;
   #currentSortType = SORT_TYPE.DEFAULT;
   #filterType = FILTER_TYPE.EVERYTHING;
+  #isLoading = true;
 
   constructor(eventsContainer, pointModel, filterModel) {
     this.#eventsContainer = eventsContainer;
@@ -86,6 +89,11 @@ export default class EventsPresenter {
         this.#clearMain({ resetSortType: true });
         this.#renderMain();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderMain();
+        break;
     }
   };
 
@@ -116,7 +124,7 @@ export default class EventsPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#eventsListComponent.element, this.#handleViewAction, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#pointModel, this.#eventsListComponent.element, this.#handleViewAction, this.#handleModeChange);
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
@@ -125,7 +133,16 @@ export default class EventsPresenter {
     points.forEach((point) => this.#renderPoint(point));
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
+  };
+
   #renderMain = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.points.length === 0) {
       this.#renderNoPoints();
     }
@@ -142,6 +159,7 @@ export default class EventsPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
