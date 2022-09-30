@@ -188,7 +188,7 @@ export default class AddPointView extends AbstractStatefulView {
   #eventPriceHandler = (evt) => {
     evt.preventDefault();
     this.updateElement({
-      basePrice: evt.target.value,
+      basePrice: Number(evt.target.value),
     });
   };
 

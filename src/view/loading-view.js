@@ -1,4 +1,4 @@
-import AbsractView from '../framework/view/abstract-view.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createLoadingTemplate = () =>
   `<p class="trip-events__msg">
@@ -6,7 +6,7 @@ const createLoadingTemplate = () =>
     </p>`;
 
 
-export default class LoadingView extends AbsractView {
+export default class LoadingView extends AbstractView {
 
   get template() {
     return createLoadingTemplate();

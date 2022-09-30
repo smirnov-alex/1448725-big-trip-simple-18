@@ -1,8 +1,6 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import AddPointView from '../view/add-point-view';
-import PointModel from '../model/point';
 import { UpdateType, UserAction } from '../utils/const.js';
-import { nanoid } from 'nanoid';
 
 
 export default class AddPointPresenter {
@@ -10,10 +8,11 @@ export default class AddPointPresenter {
   #changeData = null;
   #addPointComponent = null;
   #destroyCallback = null;
-  #pointModel = new PointModel();
+  #pointModel = null;
   #point = null;
 
-  constructor(eventsListContainer, changeData) {
+  constructor(pointModel, eventsListContainer, changeData) {
+    this.#pointModel = pointModel;
     this.#eventsListContainer = eventsListContainer;
     this.#changeData = changeData;
   }
@@ -50,6 +49,23 @@ export default class AddPointPresenter {
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
+  setSaving = () => {
+    this.#addPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#addPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#addPointComponent.shake(resetFormState);
+  };
 
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
@@ -62,8 +78,8 @@ export default class AddPointPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      { id: nanoid(), ...point },);
-    this.destroy();
+      point,
+    );
   };
 
   #setDeleteClickHandler = () => {

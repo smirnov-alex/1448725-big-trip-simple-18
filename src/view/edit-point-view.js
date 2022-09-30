@@ -1,4 +1,4 @@
-import AbsractStatefulView from '../framework/view/abstract-stateful-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { DEFAULT_POINT, POINT_TYPE } from '../utils/const.js';
 import { getDestination, getLastWord, getOffersByType } from '../utils/common.js';
 import { getShortDateAndTimeFromDate } from '../utils/dateUtils.js';
@@ -6,7 +6,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const createEditPointTemplate = (point, allOffers, allDestinations) => {
-  const { type, basePrice, dateFrom, dateTo, offers, destination } = point;
+  const { type, basePrice, dateFrom, dateTo, offers, destination, isDisabled, isSaving, isDeleting } = point;
   const shortDateAndTimeStart = getShortDateAndTimeFromDate(dateFrom);
   const shortDateAndTimeEnd = getShortDateAndTimeFromDate(dateTo);
   const foundDestination = getDestination(destination, allDestinations);
@@ -85,8 +85,8 @@ const createEditPointTemplate = (point, allOffers, allDestinations) => {
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" pattern ='^[0-9]+$' value=${basePrice}>
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+      <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
@@ -109,7 +109,7 @@ const createEditPointTemplate = (point, allOffers, allDestinations) => {
 </li>`);
 };
 
-export default class EditPointView extends AbsractStatefulView {
+export default class EditPointView extends AbstractStatefulView {
   #allDestinations = null;
   #allOffers = null;
   #datepickerStart = null;
@@ -125,8 +125,14 @@ export default class EditPointView extends AbsractStatefulView {
     this.#setDatepickerEnd();
   }
 
-  static parsePointToState = (point) => ({ ...point });
-  static parseStateToPoint = (state) => ({ ...state });
+  static parsePointToState = (point) => ({ ...point, isDisabled: false, isSaving: false, isDeleting: false });
+  static parseStateToPoint = (state) => {
+    const point = { ...state };
+    delete point.isDeleting;
+    delete point.isSaving;
+    delete point.isDisabled;
+    return point;
+  };
 
   get template() {
     return createEditPointTemplate(this._state, this.#allOffers, this.#allDestinations);
