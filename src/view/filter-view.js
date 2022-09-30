@@ -1,4 +1,4 @@
-import AbsractView from '../framework/view/abstract-view.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createFilterTemplate = (filters, currentFilterType) => {
 
@@ -25,7 +25,7 @@ const createFilterTemplate = (filters, currentFilterType) => {
 </form>`;
 };
 
-export default class FilterView extends AbsractView {
+export default class FilterView extends AbstractView {
   #filters = null;
   #currentFilter = null;
 

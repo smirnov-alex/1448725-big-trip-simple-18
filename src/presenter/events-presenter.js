@@ -1,11 +1,12 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import EventsListView from '../view/events-list';
 import NoPointsView from '../view/no-points-view';
 import LoadingView from '../view/loading-view';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 import AddPointPresenter from './add-point-presenter.js';
-import { SORT_TYPE, UpdateType, UserAction, filter, FILTER_TYPE } from '../utils/const.js';
+import { SortType, UpdateType, UserAction, filter, FilterType, TimeLimit } from '../utils/const.js';
 import { sortPointDate, sortPointPrice } from '../utils/common.js';
 
 export default class EventsPresenter {
@@ -18,8 +19,9 @@ export default class EventsPresenter {
   #sortComponent = null;
   #pointPresenter = new Map();
   #addPointPresenter = null;
-  #currentSortType = SORT_TYPE.DEFAULT;
-  #filterType = FILTER_TYPE.EVERYTHING;
+  #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
+  #currentSortType = SortType.DEFAULT;
+  #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
   constructor(eventsContainer, pointModel, filterModel) {
@@ -27,7 +29,7 @@ export default class EventsPresenter {
     this.#pointModel = pointModel;
     this.#filterModel = filterModel;
 
-    this.#addPointPresenter = new AddPointPresenter(this.#eventsListComponent.element, this.#handleViewAction);
+    this.#addPointPresenter = new AddPointPresenter(this.#pointModel, this.#eventsListComponent.element, this.#handleViewAction);
 
     this.#pointModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -38,9 +40,9 @@ export default class EventsPresenter {
     const points = this.#pointModel.points;
     const filteredPoints = filter[this.#filterType](points);
     switch (this.#currentSortType) {
-      case SORT_TYPE.DAY:
+      case SortType.DAY:
         return filteredPoints.sort(sortPointDate);
-      case SORT_TYPE.PRICE:
+      case SortType.PRICE:
         return filteredPoints.sort(sortPointPrice);
     }
     return filteredPoints;
@@ -51,8 +53,8 @@ export default class EventsPresenter {
   };
 
   addPoint = (callback) => {
-    this.#currentSortType = SORT_TYPE.DEFAULT;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FILTER_TYPE.EVERYTHING);
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#addPointPresenter.init(callback);
   };
 
@@ -62,18 +64,35 @@ export default class EventsPresenter {
   };
 
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointModel.updatePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setSaving();
+        try {
+          await this.#pointModel.updatePoint(updateType, update);
+        } catch (err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#pointModel.addPoint(updateType, update);
+        this.#addPointPresenter.setSaving();
+        try {
+          await this.#pointModel.addPoint(updateType, update);
+        } catch (err) {
+          this.#addPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#pointModel.deletePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setDeleting();
+        try {
+          await this.#pointModel.deletePoint(updateType, update);
+        } catch (err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -166,7 +185,7 @@ export default class EventsPresenter {
     }
 
     if (resetSortType) {
-      this.#currentSortType = SORT_TYPE.DEFAULT;
+      this.#currentSortType = SortType.DEFAULT;
     }
   };
 }

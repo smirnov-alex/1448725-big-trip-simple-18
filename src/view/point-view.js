@@ -1,4 +1,4 @@
-import AbsractView from '../framework/view/abstract-view.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { getDayFromDate, getFullDateAndTimeFromDate, getFullDateFromDate, getTimeFromDate } from '../utils/dateUtils.js';
 
 const createPointTemplate = (point, offers, destination) => {
@@ -56,7 +56,7 @@ const createPointTemplate = (point, offers, destination) => {
 </li>`);
 };
 
-export default class PointView extends AbsractView {
+export default class PointView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
