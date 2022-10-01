@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import { isFutureDate } from './dateUtils.js';
 
 const POINT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
@@ -26,8 +26,6 @@ const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future'
 };
-
-const isFutureDate = (dateStart, dateEnd) => dayjs().isBefore(dayjs(dateStart), 'minute') || dayjs().isBefore(dayjs(dateEnd), 'minute');
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,

@@ -25,7 +25,7 @@ export const createPointTypesTemplate = (type) => (POINT_TYPE.map((pointType) =>
   const checked = type === pointType ? 'checked' : '';
   return `<div class="event__type-item">
     <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value=${pointType} ${checked}>
-    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${pointType[0].toUpperCase() + pointType.substring(1)}</label>
+    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${pointType[0].toUpperCase()}${pointType.substring(1)}</label>
   </div>`;
 }
 ).join(''));
