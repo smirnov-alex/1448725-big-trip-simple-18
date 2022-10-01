@@ -61,7 +61,6 @@ export default class AddPointPresenter {
       this.#addPointComponent.updateElement({
         isDisabled: false,
         isSaving: false,
-        isDeleting: false,
       });
     };
     this.#addPointComponent.shake(resetFormState);

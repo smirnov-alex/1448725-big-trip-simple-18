@@ -20,7 +20,7 @@ export default class EventsPresenter {
   #pointPresenter = new Map();
   #addPointPresenter = null;
   #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
-  #currentSortType = SortType.DEFAULT;
+  #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
@@ -53,7 +53,7 @@ export default class EventsPresenter {
   };
 
   addPoint = (callback) => {
-    this.#currentSortType = SortType.DEFAULT;
+    this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#addPointPresenter.init(callback);
   };
