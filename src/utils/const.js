@@ -45,4 +45,7 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export { POINT_TYPE, SortType, DEFAULT_POINT, FilterType, TimeLimit, filter, UserAction, UpdateType };
+const AUTHORIZATION = 'Basic hfjkllcof9876hcj';
+const END_POINT = 'https://18.ecmascript.pages.academy/big-trip/';
+
+export { POINT_TYPE, SortType, DEFAULT_POINT, FilterType, TimeLimit, filter, UserAction, UpdateType, AUTHORIZATION, END_POINT };

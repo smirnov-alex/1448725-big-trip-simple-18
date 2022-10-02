@@ -11,7 +11,6 @@ const createPointTemplate = (point, offers, destination) => {
   const fullDateAndTimeEnd = getFullDateAndTimeFromDate(dateTo);
   const destinationName = destination === undefined ? '' : destination.name;
 
-  // eslint-disable-next-line no-shadow
   const generateOffersTemplate = () => {
     //console.log(offers);
     if (offers.length === 0) {

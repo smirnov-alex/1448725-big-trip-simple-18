@@ -6,7 +6,6 @@ export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #pointModel = null;
-
   #filterComponent = null;
 
   constructor(filterContainer, filterModel, pointModel) {
@@ -20,19 +19,17 @@ export default class FilterPresenter {
 
   get filters() {
     const points = this.#pointModel.points;
-
-    return [
-      {
-        type: FilterType.EVERYTHING,
-        name: 'EVERYTHING',
-        count: filter[FilterType.EVERYTHING](points).length,
-      },
-      {
-        type: FilterType.FUTURE,
-        name: 'FUTURE',
-        count: filter[FilterType.FUTURE](points).length,
-      },
-    ];
+    const filterTypeEverything = {
+      type: FilterType.EVERYTHING,
+      name: 'EVERYTHING',
+      count: filter[FilterType.EVERYTHING](points).length,
+    };
+    const filterTypeFuture = {
+      type: FilterType.FUTURE,
+      name: 'FUTURE',
+      count: filter[FilterType.FUTURE](points).length,
+    };
+    return [filterTypeEverything, filterTypeFuture];
   }
 
   init = () => {
@@ -46,7 +43,6 @@ export default class FilterPresenter {
       render(this.#filterComponent, this.#filterContainer);
       return;
     }
-
     replace(this.#filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
   };
@@ -59,9 +55,7 @@ export default class FilterPresenter {
     if (this.#filterModel.filter === filterType) {
       return;
     }
-
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
   };
-
 }
 
