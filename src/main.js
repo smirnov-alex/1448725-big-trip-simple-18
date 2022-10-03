@@ -24,9 +24,9 @@ const handleEventButtonClick = () => {
 
 eventAddButton.addEventListener('click', handleEventButtonClick);
 eventAddButton.disabled = true;
-
 filterPresenter.init();
 eventsPresenter.init(tripEvents, pointModel);
 pointModel.init().finally(() => {
   eventAddButton.disabled = false;
 });
+

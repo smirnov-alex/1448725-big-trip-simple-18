@@ -79,6 +79,7 @@ export default class PointPresenter {
   };
 
   setSaving = () => {
+    document.removeEventListener('keydown', this.#onEscKeyDown);
     if (this.#mode === Mode.EDITING) {
       this.#editPointComponent.updateElement({
         isDisabled: true,
@@ -121,8 +122,8 @@ export default class PointPresenter {
   };
 
   #replaceEditToPoint = () => {
-    replace(this.#pointComponent, this.#editPointComponent);
     document.removeEventListener('keydown', this.#onEscKeyDown);
+    replace(this.#pointComponent, this.#editPointComponent);
     this.#mode = Mode.DEFAULT;
   };
 

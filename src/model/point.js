@@ -1,7 +1,6 @@
 import Observable from '../framework/observable.js';
 import { UpdateType } from '../utils/const.js';
 
-
 export default class PointModel extends Observable {
   #pointsApiService = null;
   #points = [];
@@ -31,13 +30,12 @@ export default class PointModel extends Observable {
       this.#points = points.map(this.#adaptPointToClient);
       this.#allDestinations = await this.#pointsApiService.destinations;
       this.#allOffers = await this.#pointsApiService.offers;
+      this._notify(UpdateType.INIT);
     }
     catch (err) {
-      this.#points = [];
-      this.#allDestinations = [];
-      this.#allOffers = [];
+      this._notify(UpdateType.SERVERERROR);
+      throw new Error('Can\'t download points');
     }
-    this._notify(UpdateType.INIT);
   };
 
   updatePoint = async (updateType, update) => {

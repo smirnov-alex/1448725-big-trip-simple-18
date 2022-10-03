@@ -12,7 +12,6 @@ const createPointTemplate = (point, offers, destination) => {
   const destinationName = destination === undefined ? '' : destination.name;
 
   const generateOffersTemplate = () => {
-    //console.log(offers);
     if (offers.length === 0) {
       return ` <li class="event__offer">
       <span class="event__offer-title">No additional offers</span>

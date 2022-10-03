@@ -3,6 +3,7 @@ import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import EventsListView from '../view/events-list';
 import NoPointsView from '../view/no-points-view';
 import LoadingView from '../view/loading-view';
+import ServerErrorView from '../view/server-error-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 import AddPointPresenter from './add-point-presenter.js';
@@ -16,6 +17,7 @@ export default class EventsPresenter {
   #eventsListComponent = new EventsListView();
   #noPointsComponent = null;
   #loadingComponent = new LoadingView();
+  #serverErrorComponent = new ServerErrorView();
   #sortComponent = null;
   #pointPresenter = new Map();
   #addPointPresenter = null;
@@ -113,6 +115,11 @@ export default class EventsPresenter {
         remove(this.#loadingComponent);
         this.#renderMain();
         break;
+      case UpdateType.SERVERERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderServerError();
+        break;
     }
   };
 
@@ -124,7 +131,6 @@ export default class EventsPresenter {
   #renderEventsList = () => {
     render(this.#eventsListComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   };
-
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
@@ -156,6 +162,10 @@ export default class EventsPresenter {
     render(this.#loadingComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   };
 
+  #renderServerError = () => {
+    render(this.#serverErrorComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
+  };
+
   #renderMain = () => {
     if (this.#isLoading) {
       this.#renderLoading();
@@ -183,7 +193,6 @@ export default class EventsPresenter {
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
     }
-
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
