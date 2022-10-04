@@ -27,6 +27,10 @@ eventAddButton.disabled = true;
 filterPresenter.init();
 eventsPresenter.init(tripEvents, pointModel);
 pointModel.init().finally(() => {
-  eventAddButton.disabled = false;
+  if (pointModel.pointsError) {
+    eventAddButton.disabled = true;
+  } else {
+    eventAddButton.disabled = false;
+  }
 });
 

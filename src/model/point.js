@@ -33,6 +33,7 @@ export default class PointModel extends Observable {
       this._notify(UpdateType.INIT);
     }
     catch (err) {
+      this.pointsError = true;
       this._notify(UpdateType.SERVERERROR);
       throw new Error('Can\'t download points');
     }

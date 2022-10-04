@@ -70,6 +70,7 @@ export default class AddPointView extends AbstractStatefulView {
   #allOffers = null;
   #datepickerStart = null;
   #datepickerEnd = null;
+
   constructor(point = DEFAULT_POINT, allDestinations = [], allOffers = []) {
     super();
     this._state = AddPointView.parsePointToState(point);
@@ -80,26 +81,71 @@ export default class AddPointView extends AbstractStatefulView {
     this.#setDatepickerEnd();
   }
 
-  static parsePointToState = (point) => ({ ...point, isDisabled: false, isSaving: false });
-  static parseStateToPoint = (state) => {
-    const point = { ...state };
-    delete point.isSaving;
-    delete point.isDisabled;
-    return point;
-  };
-
   get template() {
     return createAddPointTemplate(this._state, this.#allOffers, this.#allDestinations);
   }
 
-  setFormSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  reset = (point) => {
+    this.updateElement(
+      AddPointView.parsePointToState(point),
+    );
   };
 
-  setDeleteClickHandler = (callback) => {
-    this._callback.deleteClick = callback;
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+
+    if (this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
+  };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#eventPriceHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#eventDestinationHandler);
+    if (this.element.querySelector('.event__available-offers')) {
+      this.element.querySelector('.event__available-offers').addEventListener('change', this.#eventOfferHandler);
+    }
+  };
+
+  #setDatepickerStart = () => {
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        'time_24hr': true,
+        dateFormat: 'd/m/y H:i',
+        maxDate: this._state.dateTo,
+        onClose: this.#eventDateStartHandler,
+      },
+    );
+  };
+
+  #setDatepickerEnd = () => {
+    this.#datepickerEnd = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        'time_24hr': true,
+        dateFormat: 'd/m/y H:i',
+        minDate: this._state.dateFrom,
+        onClose: this.#eventDateEndHandler,
+      },
+    );
   };
 
   #deleteClickHandler = (evt) => {
@@ -148,32 +194,6 @@ export default class AddPointView extends AbstractStatefulView {
     });
   };
 
-  #setDatepickerStart = () => {
-    this.#datepickerStart = flatpickr(
-      this.element.querySelector('#event-start-time-1'),
-      {
-        enableTime: true,
-        'time_24hr': true,
-        dateFormat: 'd/m/y H:i',
-        maxDate: this._state.dateTo,
-        onClose: this.#eventDateStartHandler,
-      },
-    );
-  };
-
-  #setDatepickerEnd = () => {
-    this.#datepickerEnd = flatpickr(
-      this.element.querySelector('#event-end-time-1'),
-      {
-        enableTime: true,
-        'time_24hr': true,
-        dateFormat: 'd/m/y H:i',
-        minDate: this._state.dateFrom,
-        onClose: this.#eventDateEndHandler,
-      },
-    );
-  };
-
   #eventOfferHandler = (evt) => {
     evt.preventDefault();
     const newOffers = this._state.offers.slice();
@@ -188,40 +208,21 @@ export default class AddPointView extends AbstractStatefulView {
     });
   };
 
-  _restoreHandlers = () => {
-    this.#setInnerHandlers();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setDeleteClickHandler(this._callback.deleteClick);
-    this.#setDatepickerStart();
-    this.#setDatepickerEnd();
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   };
 
-  #setInnerHandlers = () => {
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#eventPriceHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#eventDestinationHandler);
-    if (this.element.querySelector('.event__available-offers')) {
-      this.element.querySelector('.event__available-offers').addEventListener('change', this.#eventOfferHandler);
-    }
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
-  reset = (point) => {
-    this.updateElement(
-      AddPointView.parsePointToState(point),
-    );
-  };
-
-  removeElement = () => {
-    super.removeElement();
-
-    if (this.#datepickerStart) {
-      this.#datepickerStart.destroy();
-      this.#datepickerStart = null;
-    }
-
-    if (this.#datepickerEnd) {
-      this.#datepickerEnd.destroy();
-      this.#datepickerEnd = null;
-    }
+  static parsePointToState = (point) => ({ ...point, isDisabled: false, isSaving: false });
+  static parseStateToPoint = (state) => {
+    const point = { ...state };
+    delete point.isSaving;
+    delete point.isDisabled;
+    return point;
   };
 }

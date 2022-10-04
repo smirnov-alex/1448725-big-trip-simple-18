@@ -189,6 +189,7 @@ export default class EventsPresenter {
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
+    remove(this.#serverErrorComponent);
 
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
